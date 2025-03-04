@@ -8,10 +8,12 @@ st.title("📥 Instagram Reel Downloader")
 link = st.text_input("📌 Enter Instagram Reel Link:")
 
 DOWNLOAD_FOLDER = "downloads"
-
-# 🔹 Folder exist hai to error avoid kare
 if not os.path.exists(DOWNLOAD_FOLDER):
     os.makedirs(DOWNLOAD_FOLDER)
+
+# 👇 FFmpeg ka correct path yahan define karein
+FFMPEG_PATH = "C:/ffmpeg/bin/ffmpeg.exe"  # Windows ke liye
+# FFMPEG_PATH = "/usr/bin/ffmpeg"  # Linux/Mac ke liye
 
 if st.button("🚀 Download Reel"):
     if link:
@@ -22,6 +24,11 @@ if st.button("🚀 Download Reel"):
             ydl_opts = {
                 'outtmpl': filepath,
                 'format': 'bestvideo+bestaudio/best',
+                'postprocessors': [{
+                    'key': 'FFmpegVideoConvertor',
+                    'preferedformat': 'mp4',
+                }],
+                'ffmpeg_location': FFMPEG_PATH,  # 👈 FFmpeg path set karein
             }
 
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
